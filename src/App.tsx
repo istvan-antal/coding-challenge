@@ -1,22 +1,52 @@
 import * as React from 'react';
-import './App.css';
+import MonacoEditor from 'react-monaco-editor';
 
-const logo = require('./logo.svg');
+/* tslint:disable:no-any */
+class App extends React.Component<{}, { code: string; consoleMessages: string }> {
+    constructor() {
+        super();
 
-class App extends React.Component<{}, {}> {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+        this.state = { code: 'console.log("hello world");', consoleMessages: '' };
+    }
+    editorDidMount(editor: any, monaco: any) {
+        // console.log('editorDidMount', editor);
+        editor.focus();
+    }
+    onChange(code: string) {
+        let consoleMessages = '';
+
+        try {
+            const program = new Function('console', code);
+
+            program({
+                log: (message: string) => { consoleMessages += `${message}\n`; },
+                warn: (message: string) => { consoleMessages += `${message}\n`; },
+                error: (message: string) => { consoleMessages += `${message}\n`; },
+                debug: (message: string) => { consoleMessages += `${message}\n`; },
+                info: (message: string) => { consoleMessages += `${message}\n`; },
+            });
+        } catch (e) {
+            consoleMessages += `${e}\n`;
+        }
+
+        this.setState({ code, consoleMessages });
+    }
+    render() {
+        const onChange = this.onChange.bind(this);
+        return (
+            <div>
+                <MonacoEditor
+                    width="800"
+                    height="600"
+                    language="javascript"
+                    value={this.state.code}
+                    editorDidMount={this.editorDidMount}
+                    onChange={onChange}
+                />
+                {this.state.consoleMessages}
+            </div>
+        );
+    }
 }
 
 export default App;
