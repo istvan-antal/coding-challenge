@@ -18,10 +18,12 @@ node('nodejs') {
     }
 
     if (env.BRANCH_NAME == 'master') {
-        dir ('build') {
-            def version = (sh(returnStdout: true, script: 'git describe --tags')).trim()
-            artifactName = "coding-challenge-${version}.tar.gz"
-            sh "tar -czvf ../${artifactName} ."
+        stage('generate artifact') {
+            dir('build') {
+                def version = (sh(returnStdout: true, script: 'git describe --tags')).trim()
+                artifactName = "coding-challenge-${version}.tar.gz"
+                sh "tar -czvf ../${artifactName} ."
+            }
         }
     }
 
