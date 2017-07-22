@@ -1,0 +1,10 @@
+{
+    "title": "Adding two numbers",
+    "description": "Return a function that adds two numbers.",
+    "rounds": [
+        {
+            "test": "const add = result;\nexpect(result(2, 2)).toBe(4);\n",
+            "initialCode": ""
+        }
+    ]
+}
