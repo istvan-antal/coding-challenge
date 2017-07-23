@@ -6,6 +6,7 @@ node('nodejs') {
             $class: 'GitSCM',
             branches: [[name: "*/${env.BRANCH_NAME}"]],
         ])
+        sh 'git fetch --tags'
     }
 
     stage('npm install') {
