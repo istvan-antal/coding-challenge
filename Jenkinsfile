@@ -2,7 +2,10 @@ node('nodejs') {
     def artifactName
 
     stage('checkout') {
-        checkout scm
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: "*/${env.BRANCH_NAME}"]],
+        ])
     }
 
     stage('npm install') {
